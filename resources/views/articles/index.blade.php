@@ -81,7 +81,7 @@
                 @else
                     <h2 class="mt-5 text-xl font-black tracking-[-0.02em] text-neutral-950">No articles yet.</h2>
                     <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-neutral-600">The first story could be yours. Start with an idea and give the community something worth reading.</p>
-                    <a href="{{ route('register') }}" class="mt-6 inline-flex rounded-full bg-accent-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-accent-700">Start writing</a>
+                    <a href="{{ auth()->check() ? route('admin.articles.create') : route('register') }}" class="mt-6 inline-flex rounded-full bg-accent-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-accent-700">Start writing</a>
                 @endif
             </div>
         @endif

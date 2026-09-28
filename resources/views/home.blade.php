@@ -42,9 +42,15 @@
                         Find Article
                         <x-icon name="arrow-right" class="size-4" />
                     </a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full border border-neutral-700 px-6 py-3 text-sm font-bold text-white transition hover:border-accent-400 hover:text-accent-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950">
-                        Start writing
-                    </a>
+                    @auth
+                        <a href="{{ route('admin.articles.create') }}" class="inline-flex items-center justify-center rounded-full border border-neutral-700 px-6 py-3 text-sm font-bold text-white transition hover:border-accent-400 hover:text-accent-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950">
+                            Start writing
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center rounded-full border border-neutral-700 px-6 py-3 text-sm font-bold text-white transition hover:border-accent-400 hover:text-accent-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950">
+                            Start writing
+                        </a>
+                    @endauth
                 </div>
             </div>
 
@@ -117,7 +123,7 @@
             @else
                 <div class="rounded-2xl border border-dashed border-neutral-300 bg-white px-6 py-12 text-center">
                     <h3 class="text-lg font-bold text-neutral-900">The first story is still being written.</h3>
-                    <a href="{{ route('register') }}" class="mt-4 inline-flex rounded-full bg-accent-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-accent-700">Start writing</a>
+                    <a href="{{ auth()->check() ? route('admin.articles.create') : route('register') }}" class="mt-4 inline-flex rounded-full bg-accent-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-accent-700">Start writing</a>
                 </div>
             @endif
         </section>

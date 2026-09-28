@@ -26,6 +26,7 @@
                     <a href="{{ route('login') }}" class="rounded-full px-3 py-2 text-sm font-medium text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900">Sign in</a>
                     <a href="{{ route('register') }}" class="rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800">Start writing</a>
                 @else
+                    <a href="{{ route('admin.articles.create') }}" class="rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800">Start writing</a>
                     <a href="#" aria-label="Saved articles" class="grid size-9 place-items-center rounded-full text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900">
                         <x-icon name="bookmark" class="size-5" />
                     </a>
@@ -78,7 +79,7 @@
                     <ul class="mt-4 space-y-2.5 text-sm">
                         <li><a href="{{ route('home') }}" class="font-medium text-neutral-700 transition hover:text-accent-700">Home</a></li>
                         <li><a href="{{ route('articles.index') }}" class="font-medium text-neutral-700 transition hover:text-accent-700">Articles</a></li>
-                        <li><a href="{{ route('register') }}" class="font-medium text-neutral-700 transition hover:text-accent-700">Start writing</a></li>
+                        <li><a href="{{ auth()->check() ? route('admin.articles.create') : route('register') }}" class="font-medium text-neutral-700 transition hover:text-accent-700">Start writing</a></li>
                     </ul>
                 </div>
 

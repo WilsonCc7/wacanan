@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLogin(): View
+    public function showLogin(): View|RedirectResponse
     {
+        if (Auth::check()) {
+            return redirect()->route('home');
+        }
+
         return view('auth.login');
     }
 
@@ -40,8 +44,12 @@ class AuthController extends Controller
         return redirect()->intended(route('home'));
     }
 
-    public function showRegister(): View
+    public function showRegister(): View|RedirectResponse
     {
+        if (Auth::check()) {
+            return redirect()->route('home');
+        }
+
         return view('auth.register');
     }
 
