@@ -1,0 +1,2 @@
+#!/bin/sh
+exec php -d extension=/tmp/phpext/usr/lib/php/20250925/dom.so -d extension=/tmp/phpext/usr/lib/php/20250925/xml.so -d extension=/tmp/phpext/usr/lib/php/20250925/simplexml.so -d extension=/tmp/phpext/usr/lib/php/20250925/xmlreader.so -d extension=/tmp/phpext/usr/lib/php/20250925/xmlwriter.so -d extension=/tmp/phpext/usr/lib/php/20250925/sqlite3.so -d extension=/tmp/phpext/usr/lib/php/20250925/pdo_sqlite.so -d extension=/tmp/phpext/usr/lib/php/20250925/bcmath.so "$@"
