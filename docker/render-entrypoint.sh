@@ -39,8 +39,6 @@ await_db() {
 if await_db; then
   echo "[render] running migrations"
   php artisan migrate --force || echo "[render] migrate failed, continuing"
-  # Seed stock articles/users only when tables empty; never wipes user data.
-  php artisan db:seed --force || echo "[render] seed skipped, continuing"
   echo "[render] caching config"
   php artisan config:clear
   php artisan config:cache || true
