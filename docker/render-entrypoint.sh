@@ -19,17 +19,16 @@ chown -R www-data:www-data storage bootstrap/cache || true
 # Start Apache in background so Render detects open port immediately.
 apache2-foreground &
 APACHE_PID=$!
-
 await_db() {
   php -r '
     $h = getenv("DB_HOST"); $p = getenv("DB_PORT") ?: "5432";
     $db = getenv("DB_DATABASE") ?: "neondb";
     $u = getenv("DB_USERNAME"); $w = getenv("DB_PASSWORD");
-    // Neon cold start can take a while; retry ~5 min.
+    // Neon cold start can take a while; retry ~5 min. PDO pgsql only, no channel_binding.
     for ($i = 0; $i < 60; $i++) {
       try {
-        $c = @pg_connect("host=$h port=$p dbname=$db user=$u password=$w sslmode=require connect_timeout=5");
-        if ($c) { pg_close($c); echo "db up\n"; exit(0); }
+        new PDO("pgsql:host=$h;port=$p;dbname=$db;sslmode=require", $u, $w, [PDO::ATTR_TIMEOUT => 5]);
+        echo "db up\n"; exit(0);
       } catch (Throwable $e) {}
       echo "db wait " . ($i + 1) . "/60\n";
       sleep(5);
@@ -37,7 +36,6 @@ await_db() {
     fwrite(STDERR, "db not reachable\n"); exit(1);
   '
 }
-
 if await_db; then
   echo "[render] running migrations"
   php artisan migrate --force || echo "[render] migrate failed, continuing"
