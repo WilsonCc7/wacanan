@@ -60,6 +60,20 @@ return [
             'report' => false,
         ],
 
+        // ponytail: dedicated disk so covers have own bucket/endpoint; falls back to s3 keys
+        'covers' => [
+            'driver' => 's3',
+            'key' => env('COVERS_ACCESS_KEY_ID', env('AWS_ACCESS_KEY_ID')),
+            'secret' => env('COVERS_SECRET_ACCESS_KEY', env('AWS_SECRET_ACCESS_KEY')),
+            'region' => env('COVERS_DEFAULT_REGION', env('AWS_DEFAULT_REGION', 'ap-southeast-1')),
+            'bucket' => env('COVERS_BUCKET', env('AWS_BUCKET')),
+            'url' => env('COVERS_URL', env('AWS_URL')),
+            'endpoint' => env('COVERS_ENDPOINT', env('AWS_ENDPOINT')),
+            'use_path_style_endpoint' => env('COVERS_USE_PATH_STYLE_ENDPOINT', true),
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

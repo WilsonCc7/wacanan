@@ -56,7 +56,12 @@ class ArticleAdminController extends Controller
         $data['slug'] = $this->uniqueSlug($data['slug'] ?? null, $data['title']);
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+            // Covers live on Neon Object Storage when configured, else local public disk.
+            $disk = config('filesystems.disks.covers.bucket') ? 'covers' : 'public';
+            $data['cover_image'] = $request->file('cover_image')->store('covers', $disk);
+            if ($disk !== 'public') {
+                $data['cover_image'] = 'covers-disk:'.$data['cover_image'];
+            }
         } else {
             unset($data['cover_image']);
         }
@@ -88,11 +93,13 @@ class ArticleAdminController extends Controller
 
         if ($request->hasFile('cover_image')) {
             $oldCover = $article->cover_image;
-            $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
-
-            if ($oldCover && ! str_starts_with($oldCover, 'http')) {
-                Storage::disk('public')->delete($oldCover);
+            $disk = config('filesystems.disks.covers.bucket') ? 'covers' : 'public';
+            $data['cover_image'] = $request->file('cover_image')->store('covers', $disk);
+            if ($disk !== 'public') {
+                $data['cover_image'] = 'covers-disk:'.$data['cover_image'];
             }
+
+            $this->deleteCoverFile($oldCover);
         } else {
             unset($data['cover_image']);
         }
@@ -109,15 +116,32 @@ class ArticleAdminController extends Controller
 
     public function destroy(Article $article): RedirectResponse
     {
-        if ($article->cover_image && ! str_starts_with($article->cover_image, 'http')) {
-            Storage::disk('public')->delete($article->cover_image);
-        }
+        $this->deleteCoverFile($article->cover_image);
 
         $article->delete();
 
         return redirect()
             ->route('admin.articles.index')
             ->with('status', 'Article deleted successfully.');
+    }
+
+    /**
+     * Deletes an uploaded cover from whichever disk holds it.
+     * Seeded rows keep remote http URLs; uploads are local paths or covers-disk: prefixed.
+     */
+    private function deleteCoverFile(?string $cover): void
+    {
+        if (! $cover || str_starts_with($cover, 'http')) {
+            return;
+        }
+
+        if (str_starts_with($cover, 'covers-disk:')) {
+            Storage::disk('covers')->delete(substr($cover, strlen('covers-disk:')));
+
+            return;
+        }
+
+        Storage::disk('public')->delete($cover);
     }
 
     public function bulk(Request $request): RedirectResponse

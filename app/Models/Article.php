@@ -84,8 +84,16 @@ class Article extends Model
             return '';
         }
 
-        return str_starts_with($this->cover_image, 'http')
-            ? $this->cover_image
-            : \Illuminate\Support\Facades\Storage::disk('public')->url($this->cover_image);
+        if (str_starts_with($this->cover_image, 'http')) {
+            return $this->cover_image;
+        }
+
+        if (str_starts_with($this->cover_image, 'covers-disk:')) {
+            $key = substr($this->cover_image, strlen('covers-disk:'));
+
+            return \Illuminate\Support\Facades\Storage::disk('covers')->url($key);
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->cover_image);
     }
 }
