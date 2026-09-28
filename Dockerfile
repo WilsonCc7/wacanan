@@ -32,10 +32,10 @@ RUN composer dump-autoload --optimize \
     && mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
-COPY docker/koyeb-entrypoint.sh /usr/local/bin/koyeb-entrypoint.sh
+COPY docker/render-entrypoint.sh /usr/local/bin/render-entrypoint.sh
 COPY docker/koyeb-apache-ports.conf /etc/apache2/ports.conf
 COPY docker/koyeb-apache-vhost.conf /etc/apache2/sites-available/000-default.conf
-RUN chmod +x /usr/local/bin/koyeb-entrypoint.sh
+RUN chmod +x /usr/local/bin/render-entrypoint.sh
 
 EXPOSE 8000
-ENTRYPOINT ["koyeb-entrypoint.sh"]
+ENTRYPOINT ["render-entrypoint.sh"]
