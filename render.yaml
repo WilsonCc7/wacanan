@@ -43,6 +43,14 @@ services:
         value: https://br-fancy-haze-azrtiv36.storage.c-3.ap-southeast-1.aws.neon.tech/wacanan-cover
       - key: COVERS_USE_PATH_STYLE_ENDPOINT
         value: true
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stderr
       - key: COVERS_ACCESS_KEY_ID
         sync: false
       - key: COVERS_SECRET_ACCESS_KEY
